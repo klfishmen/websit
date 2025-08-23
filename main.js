@@ -114,25 +114,76 @@ function initializeEventListeners() {
     });
 }
 
+/**
+ * 更新後的 openProductModal 函式
+ * - 整合了 products.json 的詳細說明
+ * - 整合了 fish-database.json 的關聯知識
+ */
 function openProductModal(productId) {
     const product = allProducts.find(p => p.product_id === productId);
     if (!product) return;
+    
+    // 動態更新 Meta Tags 以利分享
     const domain = "https://klfishmen.github.io/websit";
     document.querySelector('meta[property="og:title"]').setAttribute('content', `${product.product_name} - 崁仔頂小商人`);
     document.querySelector('meta[property="og:description"]').setAttribute('content', (product.description || '新鮮海鮮，立即訂購！').substring(0, 100) + '...');
     document.querySelector('meta[property="og:image"]').setAttribute('content', `${domain}/images/${product.product_id}.jpg`);
     document.querySelector('meta[property="og:url"]').setAttribute('content', `${domain}/#product-${product.product_id}`);
-    const modal = document.getElementById('product-modal');
-    const modalBody = document.getElementById('modal-body-content');
-    modalBody.innerHTML = `
+
+    // 取得關聯的魚種資料
+    const fish = product.related_fish_id ? fishDatabase.get(product.related_fish_id) : null;
+
+    let modalHTML = `
         <h2 class="modal-product-title">${product.product_name}</h2>
         <p class="modal-product-description">${product.description || '暫無詳細說明。'}</p>
+    `;
+
+    // 建立詳細說明區塊 (內行撇步 & 料理建議)
+    if (product.insider_tip || product.cooking_suggestions) {
+        modalHTML += `<div class="modal-details-section">`;
+        if (product.insider_tip && product.insider_tip !== "...") {
+            modalHTML += `
+                <h3 class="modal-details-title">內行撇步</h3>
+                <p>${product.insider_tip}</p>
+            `;
+        }
+        if (product.cooking_suggestions && product.cooking_suggestions !== "...") {
+             modalHTML += `
+                <h3 class="modal-details-title">料理建議</h3>
+                <p>${product.cooking_suggestions}</p>
+            `;
+        }
+        modalHTML += `</div>`;
+    }
+
+    // 建立魚類知識區塊 (如果商品有關聯魚種)
+    if (fish) {
+        modalHTML += `
+            <div class="fish-info-section">
+                <h3 class="fish-info-title">小商人魚類知識：${fish.commonName}</h3>
+                <div class="modal-details-grid">
+                    <p><strong>俗名：</strong> ${fish.otherNames || '無'}</p>
+                    <p><strong>學名：</strong> <em>${fish.scientificName || '暫無'}</em></p>
+                    <p><strong>產季：</strong> ${fish.peakSeason || '全年'}</p>
+                    <p><strong>說明：</strong> ${fish.description || '暫無'}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // 訂購按鈕
+    modalHTML += `
         <div class="modal-order-cta">
             <button onclick="prefillAndScroll('${product.product_name}')" class="cta-button">我要訂購此商品</button>
         </div>
     `;
+    
+    const modal = document.getElementById('product-modal');
+    const modalBody = document.getElementById('modal-body-content');
+    modalBody.innerHTML = modalHTML;
     modal.classList.add('visible');
 }
+
 
 function prefillAndScroll(productName) {
     const prefillEntryId = 'entry.xxxxxxxxxx'; 
