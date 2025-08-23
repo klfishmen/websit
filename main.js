@@ -46,7 +46,7 @@ function isCurrentlyInSeason(product) {
 function renderProducts(productsToRender) {
     const container = document.getElementById('product-list-container');
     if (!container) return;
-    const domain = "https://yourdomain.com";
+    const domain = "https://klfishmen.github.io/websit";
     container.innerHTML = productsToRender.map(product => {
         const isSeasonal = isCurrentlyInSeason(product);
         const seasonalBadgeHTML = isSeasonal ? `<div class="seasonal-badge">當季</div>` : '';
@@ -117,7 +117,7 @@ function initializeEventListeners() {
 function openProductModal(productId) {
     const product = allProducts.find(p => p.product_id === productId);
     if (!product) return;
-    const domain = "https://yourdomain.com";
+    const domain = "https://klfishmen.github.io/websit";
     document.querySelector('meta[property="og:title"]').setAttribute('content', `${product.product_name} - 崁仔頂小商人`);
     document.querySelector('meta[property="og:description"]').setAttribute('content', (product.description || '新鮮海鮮，立即訂購！').substring(0, 100) + '...');
     document.querySelector('meta[property="og:image"]').setAttribute('content', `${domain}/images/${product.product_id}.jpg`);
@@ -148,7 +148,7 @@ function prefillAndScroll(productName) {
 function shareProduct(id, name) {
     const product = allProducts.find(p => p.product_id === id);
     if (!product) return;
-    const url = `https://yourdomain.com/#product-${id}`;
+    const url = `https://klfishmen.github.io/websit/#product-${id}`;
     const text = `看看我在「崁仔頂小商人」找到的${name}，超新鮮的！ #海鮮 #崁仔頂 #基隆美食`;
     if (navigator.share) {
         navigator.share({ title: `分享好料：${name}`, text: text, url: url, }).catch(console.error);
