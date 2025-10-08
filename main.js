@@ -61,8 +61,6 @@ function renderProducts(productsToRender) {
                 ${seasonalBadgeHTML}
                 <h3 class="product-title">${product.product_name}</h3>
                 <p class="product-spec">${specificationsHTML}</p>
-                // <p class="product-price">NT$ ${product.Price}</p>
-                ${cbaHTML}
                 <div class="product-card-buttons">
                     <button class="btn detail-btn" data-product-id="${product.product_id}">查看詳情</button>
                     <button class="btn share-btn" data-product-id="${product.product_id}" data-product-name="${product.product_name}">分享</button>
